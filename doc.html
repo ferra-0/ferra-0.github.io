@@ -389,6 +389,130 @@ fn main(): i64 {
       <p>Also every function's size is 8 bytes.</p>
       `
     },
+    
+    {
+      theme: "Pointers",
+      bigtext: "Pointers - syntax, rules",
+      content: `
+        <p>Pointers are created using ^ symbol<br>Basic pointers:</p>
+        
+        <div class="code"><pre>fn main(): i64 {
+  let x: i64 = 5
+  let y: i64 = 2
+  let p: ptr = ^x // creates x reference
+
+  // logs x's address
+  log(p) // 0x7ffcc9288430
+
+  // logs x's value (dereference)
+  log(p^) // 5
+
+  p^ = 10 // you can change the 
+  // value by it's pointer
+
+  log(p^) // 10
+
+  p = ^y // you can swap addresses
+
+  log(p) // 0x7ffcc9288428
+  log(p^) // 2
+
+  ret 0
+}
+</pre></div>
+        <p>Function pointers:</p>
+        <div class="code"><pre>// to create fn pointer,
+// you need to specify it's return type
+
+// if not specified:
+// Cannot take the address of function 'hello' because its signature is not representable yet :/
+fn hello(): nul {
+  log("Hello")
+}
+
+fn main(): i64 {
+  let h: ptr = hello
+  let n: fn = hello
+  let p: ptr = ^hello
+  // works with all variants
+
+  h() // Hello
+  n() // Hello
+  p() // Hello
+
+  ret 0
+}
+</pre></div>
+
+        <p>Struct pointers:</p>
+        <div class="code"><pre>stct Some {
+  x: i64
+}
+
+fn main(): i64 {
+  let s: Some
+  s.x = 5
+  let p: ptr = ^s // creates a ptr for full struct
+
+  log(p) // 0x7ffe93576a60 (address)
+  log(p^) // 0x7ffe93576a60 (same, because
+  // you can't log a struct)
+
+  // dereference and get a field
+  log((p^).x) // 5
+
+  // also you can change fields with a ptr
+  (p^).x = 2
+
+  log((p^).x) // 2
+
+  // and also you can create a pointer only to a specicif field
+  let f: ptr = ^(s.x)
+  // ^() accepts every expression
+  // and (p^) too
+
+  log(f) // 0x7ffe93576a60 (same, because it's the same struct)
+  log(f^) // 2
+
+  ret 0
+}
+</pre></div>
+
+        <p>And important:</p>
+        <div class="code"><pre>// There is an important rule for structures
+// By default, you pass them in every function by reference
+// To pass them by value, add '!' to the type
+
+stct Some {
+  x: i64
+}
+
+// function, that takes a parameter by reference
+fn byref(s: Some) {
+  s.x = 2
+}
+
+// function, that takes a parameter by value
+// (copies the value)
+fn byval(s: Some!) {
+  s.x = 2
+}
+
+fn main(): i64 {
+  let s: Some
+  s.x = 5
+  
+  byval(s) // copies this struct
+  log(s.x) // 5
+
+  byref(s) // changes it by reference
+  log(s.x) // 2
+
+  ret 0
+}
+</pre></div>
+      `
+    },
 
     {
       theme: "Structs",
@@ -584,6 +708,52 @@ fn main(): i64 {
 </pre></div>
 
         <p>Half, if not more, of the standard library is based on template functions and structures</p>
+      `
+    },
+
+    {
+      theme: "Importing C functions",
+      bigtext: "Importing C functions",
+      content: `
+        <p>Import C function by writing <span class="kw">extern</span> to fn</p>
+        <div class="code"><pre>// let's import strlen function from c
+extern fn strlen(str): i64
+// yes, that's all you need :)
+
+fn main(): i64 {
+  log(strlen("Hello")) // 5
+
+  ret 0
+}
+</pre></div>
+
+        <p>Import C structs:</p>
+        <div class="code"><pre>// let's analyze this topic a little bit more
+
+// Timer(from stdlib) uses extern structure
+// To create it, just paste it's fields
+
+stct timespec {
+  tv_sec: i64,
+  tv_nsec: i64
+}
+// that's all needed
+// and let's import extern fn for timespec also
+extern fn timespec_get(ptr, i32): i32
+
+fn main(): i64 {
+  let t: timespec
+  timespec_get(^t, 1)
+
+  // nanoseconds
+  log(t.tv_nsec) // 749281678
+
+  // seconds
+  log(t.tv_sec) // 1787400677
+
+  ret 0
+}
+</pre></div>
       `
     }
   ],
