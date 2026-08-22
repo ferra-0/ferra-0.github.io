@@ -18,7 +18,7 @@
     <a href="edoc.html">eDocs</a>
     <a href="doc.html">Docs</a>
     <a href="main.html">Language</a>
-    <a href="https://github.com/ferra-0/Ferra" target="_blank">GitHub</a>
+    <a href="https://github.com/ferra-0/Ferra-Install" target="_blank">GitHub</a>
   </div>
 </div>
 <br>
@@ -53,37 +53,24 @@ const config = {
       theme: "Fast start",
       bigtext: "Fast start",
       content: `
-        <p>To start with the Ferra, firstly you need to <a class="basica" target="_blank" href="https://github.com/ferra-0">install it from GitHub</a>.</p>
-        <p>If you are on Windows, navigate to Ferra-Win, if on MacOS -> Ferra-Mac, etc</p>
-        <p>In your terminal, navigate to directory called ferralang.</p>
-        <div class="code">
-          <pre>- ferralang
-    ...
-    > src
-    > tests
-    compile.sh // launch this</pre>
-        </div>
-        <p>Launch compile.sh.</p>
-        <div class="code">
-          <pre>--- Compiling Ferra compiler
---- Compiling cFerra modules
-Compiling fehttp
-Compiling miniaudio
-Compiling native_bridge
-Compiling thread
-Compiling json
-Compiling pathdir
---- Exporting FERRA_PATH
---- Making eFerra compiler
-Generated LLVM IR: efe.ll
-warning: overriding the module target triple with x86_64-pc-linux-gnu [-Woverride-module]
-1 warning generated.
---- Making iron manager
-Ferra installed. Restart the terminal or run: source ~/.bashrc
-</pre>
-        </div>
-        <p style="color: white;">If you see something like this, then congratulations because you've successfully installed Ferra!</p>
-        <p style="color: white;">As next step, navigate to -> 'Iron manager'</p>
+        <p>To start with the Ferra, firstly you need to <a class="basica" target="_blank" href="https://github.com/ferra-0/Ferra-Install">install it from GitHub</a>.</p>
+        <p>Choose your OS, then install zip archive for it.</p>
+        <p>Unzip the archive. You'll see something like this:</p>
+        
+        <div class="code"><pre>bin
+share
+lib
+README.md
+uninstall.sh // or uninstall.ps1 for Windows
+install.sh // or install.ps1</pre></div>
+
+        <p>Launch install.sh or install.ps1<br>
+          A-a-and...<br>
+          Ferra is ready for use!<br><br>
+          As next step, navigate -> 'Iron manager'
+        </p>
+
+        <p>If you saw a bug in Ferra, please report here: ferraproject0@gmail.com<br>Thank you!</p>
       `
     },
 
@@ -93,13 +80,13 @@ Ferra installed. Restart the terminal or run: source ~/.bashrc
       content: `
       <div class="table-wrap"><table>
         <p>All commands</p>
-  <thead><tr><th>Command</th><th>Meaning</th></tr></thead>
-  <tbody>
-    <tr><td><span class="badge">iron</span></td> <td>Compile and run the project</td></tr>
-    <tr><td><span class="badge">iron new</span></td> <td>Create new project with ferra.json and main.fe</td></tr>
-    <tr><td><span class="badge">iron arg1 arg2 ...</span></td> <td>Compile and run the project with extra arguments</td></tr>
-  </tbody>
-</table></div>
+        <thead><tr><th>Command</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge">iron</span></td> <td>Compile and run the project</td></tr>
+          <tr><td><span class="badge">iron new</span></td> <td>Create new project with ferra.json and main.fe</td></tr>
+          <tr><td><span class="badge">iron arg1 arg2 ...</span></td> <td>Compile and run the project with extra arguments</td></tr>
+        </tbody>
+      </table></div>
 
         <p>Iron manager allows you to easily create and run new projects.</p>
         <p>To create new project, type:</p>
