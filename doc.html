@@ -36,6 +36,81 @@
 <!-- config -->
 <script>
 const config = {
+  updates: [
+    {
+      theme: "Ferra 1.18.0",
+      bigtext: "Ferra 1.18.0 and further",
+      content: `
+        <p>
+- Func, Var:<br>
+-- No 'let', no 'fn'. Now these are in the past. Use 'var' and 'func'<br><br>
+
+- Dynamic types inferring<br>
+-- No need to note types now. They'll be automatically inferred<br><br>
+
+- Tuples:<br>
+<div class="code"><pre>var t = ("Bob", 24)</pre></div>
+<div class="code"><pre>func user(): (str, bol) { ret ("Alex", 25) }</pre></div>
+<br>
+
+- Destructuring tuples:<br><br>
+<div class="code"><pre>var t = ("Bob", 24)
+var name, age = t</pre></div><br>
+
+-- if something not needed:<br><br>
+<div class="code"><pre>var _, age = t</pre></div>
+<br>
+
+- ! works now not only on structs:<br><br>
+<div class="code"><pre>func copy(a: i64!) {...}</pre></div>
+<div class="code"><pre>func copy< T >(a: T!) {...}</pre></div>
+<br>
+
+- Return constants in functions:<br><br>
+<div class="code"><pre>func constant(): i64! { ret 5 }</pre></div><br>
+
+- Grouped declarations:<br><br>
+<div class="code"><pre>var i32(
+ a = 1,
+ b = 2,
+ c = 3
+)
+</pre></div>
+<div class="code"><pre>var 
+  a = 1, 
+  b = 2, 
+  c = 3
+</pre></div>
+<br>
+
+- Added safer approach of Http:<br><br>
+<div class="code"><pre>const http: Http()
+var r, ok = http.get("https://example.com")
+if !ok {...}
+</pre></div><br>
+
+- Added safer approach of HttpStream:<br><br>
+<div class="code"><pre>const s: HttpStream("https://example.com", "GET", null)
+if !s.open() {...}
+</pre></div><br>
+
+- Safer approach of Json.get() and Json.at(): now returns tuple<br><br>
+<div class="code"><pre>var o: Json() o.makeobj()
+o.setstr("name", "Bob")
+
+var name, ok = o.get("name")
+if !ok {...}
+</pre></div><br>
+
+- Inline hints (lsp)<br>
+-- raw code: var x = 5<br>
+inlined code: var x: int = 5<br><br><br>
+
+Thanks for showing interest in Ferra!</p>
+      `
+    }
+  ],
+
   start: [
     {
       theme: "Introduction",
@@ -123,7 +198,7 @@ install.sh // or install.ps1</pre></div>
 </table></div>
         <p>Let's paste this code into main.fe:</p>
         <div class="code">
-          <pre>fn main(): i64 { 
+          <pre>func main(): i64 { 
   log("Hello, World!")
 
   ret 0 
@@ -153,10 +228,8 @@ Hello, World!
         <p>Your first Ferra program.</p>
 
         <div class="code">
-<pre>fn main(): i64 {
+<pre>func main() {
   log("Hello, World!") // print something to terminal
-
-  ret 0
 }</pre>
         </div>
       `,
@@ -181,9 +254,9 @@ Hello, World!
       theme: "Types and variables",
       bigtext: "Primitive types and variables",
       content: `
-        <p>Variables are declared with <span class="kw">const</span> or <span class="kw">let</span> keywords:</p>
-        <div class="code"><pre>fn main(): i64 { 
-  let x: i64 = 0
+        <p>Variables are declared with <span class="kw">const</span> or <span class="kw">var</span> keywords:</p>
+        <div class="code"><pre>func main(): i64 { 
+  var x: i64 = 0
   log(x) // 5
   x = 5 // changable, so no errors
 
@@ -210,7 +283,7 @@ Hello, World!
         </table></div>
 
         <p>Here is example of using more primitive types:</p>
-        <div class="code"><pre>fn main(): i64 { 
+        <div class="code"><pre>func main(): i64 { 
   const name: str = "Bob" 
   // strs are not allocated, 
   // so no need to free them
@@ -232,6 +305,31 @@ Hello, World!
 
   ret 0
 }</pre></div>
+
+        <p>Creating multiple variables:</p>
+        <div class="code"><pre>// From Ferra 1.18.0 types are automatically inferred
+          
+func main() {
+  var i32(
+    a = 1,
+    b = 2,
+    c = 3
+  )
+
+  var
+    x = 4,
+    y = 5,
+    name = "Bob"
+
+  log(a) // 1
+  log(b) // 2
+  log(c) // 3
+
+  log(x) // 4
+  log(y) // 5
+  log(name) // Bob
+}
+</pre></div>
       `
     },
     
@@ -241,7 +339,7 @@ Hello, World!
       content: `
         <p><span class="kw">if</span> keyword is easy to read, so to write</p>
 
-        <div class="code"><pre>fn main(): i64 { 
+        <div class="code"><pre>func main(): i64 { 
   const x: i64 = 5
 
   if x > 8 {
@@ -258,8 +356,8 @@ Hello, World!
 }</pre></div>
 
         <p>The <span class="kw">for</span> keyword also serves as a while</p>
-        <div class="code"><pre>fn main(): i64 { 
-  let i: i64 = 0
+        <div class="code"><pre>func main(): i64 { 
+  var i: i64 = 0
   for i < 3 {
     log(i)
     i += 1
@@ -289,14 +387,14 @@ Hello, World!
       bigtext: "Primitive type arrays - syntax, rules",
       content: `
         <p>Basic syntaxes of creating an array:</p>
-        <div class="code"><pre>let arr[size]: type</pre></div>
-        <div class="code"><pre>let arr[size]: type = [...]</pre></div>
+        <div class="code"><pre>var arr[size]: type</pre></div>
+        <div class="code"><pre>var arr[size]: type = [...]</pre></div>
 
         <p>Here is a simple example of array with integers:</p>
-        <div class="code"><pre>fn main(): i64 { 
-  let ints[3]: i64 = [1, 2, 3]
+        <div class="code"><pre>func main(): i64 { 
+  var ints[3]: i64 = [1, 2, 3]
   // congratulations! we just created a static array
-  let ints_size: usize = sizeof(ints)/sizeof(ints[0])
+  var ints_size: usize = sizeof(ints)/sizeof(ints[0])
   // at the moment there is no other way 
   // to find out the size of the array,
   // so we need to use this formula: sizeof(arr)/sizeof(arr[0])
@@ -320,9 +418,9 @@ Hello, World!
 </pre></div>
 
         <p>Here is a another example of array with strs:</p>
-<div class="code"><pre>fn main(): i64 { 
-  let letters[3]: str = ["B", "o", "b"]
-  let letters_size: usize = sizeof(letters)/sizeof(letters[0])
+<div class="code"><pre>func main(): i64 { 
+  var letters[3]: str = ["B", "o", "b"]
+  var letters_size: usize = sizeof(letters)/sizeof(letters[0])
 
   for i in letters_size {
     log(letters[i])
@@ -348,23 +446,23 @@ Hello, World!
       bigtext: "Functions - syntax, rules",
       content: `
         <p>Creating functions:</p>
-        <div class="code"><pre>fn name(arg1: type, arg2: type): type {...}</pre></div>
+        <div class="code"><pre>func name(arg1: type, arg2: type): type {...}</pre></div>
 
         <p>
           Functions are declared using
-          <span class="inline-code">fn</span>.
+          <span class="inline-code">func</span>.
         </p>
 
         <div class="code">
-<pre>fn hello() { // function that returns void
+<pre>func hello() { // function that returns void
   log("hello!")
 }
 
-fn add(a: i64, b: i64): i64 { // function that returns i64
+func add(a: i64, b: i64): i64 { // function that returns i64
   ret a + b
 }
 
-fn first(s: str): i8 { // returns i8, because str represents an array of i8 values
+func first(s: str): i8 { // returns i8, because str represents an array of i8 values
   ret s[0]
   // you can imagine str "Bob" as:
   // ["B", "o", "b"]
@@ -372,7 +470,7 @@ fn first(s: str): i8 { // returns i8, because str represents an array of i8 valu
   // so "B" as i8 is 66
 }
 
-fn main(): i64 { 
+func main(): i64 { 
   hello() // hello!
 
   log(add(2,3)) // 5
@@ -389,6 +487,48 @@ fn main(): i64 {
       <p>Also every function's size is 8 bytes.</p>
       `
     },
+
+    {
+      theme: "Tuples",
+      bigtext: "Tuples - syntax, rules",
+      content: `
+        <p>Creating tuples:</p>
+        <div class="code"><pre>var t: tup = ("Hello", 5)</pre></div>
+        <div class="code"><pre>var t: (str, int) = ("Hello", 5)</pre></div>
+
+        <p>Tuples' types are unchangable:</p>
+        <div class="code"><pre>func main() {
+  var t: (str, int) = ("Bob", 24)
+
+  t[0] = 5 // error: Cannot assign incompatible value :/
+}
+</pre></div>
+
+        <p>You can destruct a tuple by pieces:</p>
+        <div class="code"><pre>func main() {
+  var t: (str, int) = ("Bob", 24)
+
+  var name: str, age: int = t
+
+  log(name) // Bob
+  log(age) // 24
+}
+</pre></div>
+
+        <p>Functions that return tuples:</p>
+        <div class="code"><pre>func user(): (str, int) {
+  ret ("Bob", 24)
+}
+
+func main() {
+  var name: str, age: int = user()
+
+  log(name) // Bob
+  log(age) // 24
+}
+</pre></div>
+      `
+    },
     
     {
       theme: "Pointers",
@@ -396,10 +536,10 @@ fn main(): i64 {
       content: `
         <p>Pointers are created using ^ symbol<br>Basic pointers:</p>
         
-        <div class="code"><pre>fn main(): i64 {
-  let x: i64 = 5
-  let y: i64 = 2
-  let p: ptr = ^x // creates x reference
+        <div class="code"><pre>func main(): i64 {
+  var x: i64 = 5
+  var y: i64 = 2
+  var p: ptr = ^x // creates x reference
 
   // logs x's address
   log(p) // 0x7ffcc9288430
@@ -421,19 +561,19 @@ fn main(): i64 {
 }
 </pre></div>
         <p>Function pointers:</p>
-        <div class="code"><pre>// to create fn pointer,
+        <div class="code"><pre>// to create func pointer,
 // you need to specify it's return type
 
 // if not specified:
 // Cannot take the address of function 'hello' because its signature is not representable yet :/
-fn hello(): nul {
+func hello(): nul {
   log("Hello")
 }
 
-fn main(): i64 {
-  let h: ptr = hello
-  let n: fn = hello
-  let p: ptr = ^hello
+func main(): i64 {
+  var h: ptr = hello
+  var n: func = hello
+  var p: ptr = ^hello
   // works with all variants
 
   h() // Hello
@@ -449,10 +589,10 @@ fn main(): i64 {
   x: i64
 }
 
-fn main(): i64 {
-  let s: Some
+func main(): i64 {
+  var s: Some
   s.x = 5
-  let p: ptr = ^s // creates a ptr for full struct
+  var p: ptr = ^s // creates a ptr for full struct
 
   log(p) // 0x7ffe93576a60 (address)
   log(p^) // 0x7ffe93576a60 (same, because
@@ -467,7 +607,7 @@ fn main(): i64 {
   log((p^).x) // 2
 
   // and also you can create a pointer only to a specicif field
-  let f: ptr = ^(s.x)
+  var f: ptr = ^(s.x)
   // ^() accepts every expression
   // and (p^) too
 
@@ -488,18 +628,18 @@ stct Some {
 }
 
 // function, that takes a parameter by reference
-fn byref(s: Some) {
+func byref(s: Some) {
   s.x = 2
 }
 
 // function, that takes a parameter by value
 // (copies the value)
-fn byval(s: Some!) {
+func byval(s: Some!) {
   s.x = 2
 }
 
-fn main(): i64 {
-  let s: Some
+func main(): i64 {
+  var s: Some
   s.x = 5
   
   byval(s) // copies this struct
@@ -549,8 +689,8 @@ stct Less {
   x: i16
 }
 
-fn main(): i64 { 
-  let s: Some // create variable s with type of Some
+func main(): i64 { 
+  var s: Some // create variable s with type of Some
   s.x = 5
   s.y = 2
 
@@ -574,8 +714,8 @@ impl Num add(other: i64) { // add method to structure by writing impl keyword
   this.n += other // refer to structure by writing this
 }
 
-fn main(): i64 { 
-  let num: Num
+func main(): i64 { 
+  var num: Num
   num.n = 5
 
   log(num.n) // 5
@@ -599,8 +739,8 @@ impl Num Num(_n: i64) {
   this.n += 1 // let's add one to see if the constructor is working
 }
 
-fn main(): i64 { 
-  let num: Num(5) // to call a constructor just use ()
+func main(): i64 { 
+  var num: Num(5) // to call a constructor just use ()
 
   log(num.n) // 6
   // because we added one in constructor
@@ -619,9 +759,9 @@ oper Num < + [other: Num]>: i64 {
   ret this.n + other.n // return sum of fields in structures
 }
 
-fn main(): i64 { 
-  let num: Num
-  let num2: Num
+func main(): i64 { 
+  var num: Num
+  var num2: Num
 
   num.n = 5
   num2.n = 5
@@ -646,8 +786,8 @@ drop BigData() {
   free(this.data) // this will be called automatically in the end of functions
 }
 
-fn main(): i64 { 
-  let bd: BigData() // constructor allocated some data
+func main(): i64 { 
+  var bd: BigData() // constructor allocated some data
 
   log(bd.data) // 0x5dfcc3b702a0
 
@@ -666,11 +806,11 @@ fn main(): i64 {
       content: `
         <p>Template functions allow you to write function once for all types</p>
 
-        <div class="code"><pre>fn add< T >(a: T, b: T): T { // create template function by adding <>
+        <div class="code"><pre>func add< T >(a: T, b: T): T { // create template function by adding <>
   ret a + b
 }
 
-fn main(): i64 { 
+func main(): i64 { 
   log(add(2, 5)) // 7
 
   log(add(3.2, 2.5)) // 5.7
@@ -689,14 +829,14 @@ stct ALot< T, V > { // template struct with multiple types
   second: V
 }
 
-fn main(): i64 { 
-  let s: Some< i16 >
+func main(): i64 { 
+  var s: Some< i16 >
   s.x = 5
 
   log(s.x) // 5
   log(sizeof(s.x)) // 2, as needed for i16
 
-  let a: ALot< str, u8 >
+  var a: ALot< str, u8 >
   a.first = "Bob"
   a.second = 3
 
@@ -715,12 +855,12 @@ fn main(): i64 {
       theme: "Importing C functions",
       bigtext: "Importing C functions",
       content: `
-        <p>Import C function by writing <span class="kw">extern</span> to fn</p>
+        <p>Import C function by writing <span class="kw">extern</span> to func</p>
         <div class="code"><pre>// let's import strlen function from c
-extern fn strlen(str): i64
+extern func strlen(str): i64
 // yes, that's all you need :)
 
-fn main(): i64 {
+func main(): i64 {
   log(strlen("Hello")) // 5
 
   ret 0
@@ -738,11 +878,11 @@ stct timespec {
   tv_nsec: i64
 }
 // that's all needed
-// and let's import extern fn for timespec also
-extern fn timespec_get(ptr, i32): i32
+// and let's import extern func for timespec also
+extern func timespec_get(ptr, i32): i32
 
-fn main(): i64 {
-  let t: timespec
+func main(): i64 {
+  var t: timespec
   timespec_get(^t, 1)
 
   // nanoseconds
@@ -767,8 +907,8 @@ fn main(): i64 {
 
         <div class="code"><pre>take "fe/vec.fe" // import a library
 
-fn main(): i64 { 
-  let v: Vec< i32 >() // Vec is a template structure
+func main(): i64 { 
+  var v: Vec< i32 >() // Vec is a template structure
   // calling constructor by adding ()
 
   v.push(1) // push some values
@@ -817,8 +957,8 @@ fn main(): i64 {
 
         <div class="code"><pre>take "fe/string.fe" // import a library
 
-fn main(): i64 { 
-  let s: String()
+func main(): i64 { 
+  var s: String()
   s.append("Hello, World!")
 
   log(s.cstr()) // Hello, World!
@@ -860,7 +1000,7 @@ fn main(): i64 {
 
         <div class="code"><pre>take "fe/timer.fe"
 
-fn main(): i64 { 
+func main(): i64 { 
   timer.start() // reset the timer
 
   // let's see how much time 
@@ -896,7 +1036,7 @@ fn main(): i64 {
 
         <div class="code"><pre>take "fe/math.fe"
 
-fn main(): i64 { 
+func main(): i64 { 
   log(sin(0.5)) // 0.479426
 
   ret 0
@@ -925,13 +1065,13 @@ fn main(): i64 {
 
         <div class="code"><pre>take "fe/json.fe"
 
-fn main(): i64 { 
-  let o: Json()
+func main(): i64 { 
+  var o: Json()
   o.makeobj() // imagine that o is {} (empty object) now
 
   o.setstr("name", "Bob") // now it's { "name": "Bob" }
 
-  let name: Json() // create new json object to extract the "name" from o
+  var name: Json() // create new json object to extract the "name" from o
   if o.get("name", name) is false {
     log("o.get fail!")
     ret 1
@@ -1013,8 +1153,8 @@ fn main(): i64 {
 <br>
         <div class="code"><pre>take "fe/http.fe"
 
-fn main(): i64 { 
-  let req: str = http_get("https://example.com")
+func main(): i64 { 
+  var req: str = http_get("https://example.com")
 
   log(req)
 
@@ -1023,6 +1163,27 @@ fn main(): i64 {
   // frees data correctly
 
   ret 0
+}
+</pre></div>
+
+        <p>New! Safer approach of Http.</p>
+        <div class="code"><pre>take "fe/http.fe"
+
+func main() {
+  const http: Http() // create new instance of Http
+
+  var r, ok = http.get("https://example.com")
+  // destructuring, because http.get returns tuple
+
+  if !ok {
+    log("http.get fail")
+    ret 1
+  }
+
+  log(r) // HTML
+
+  // Http object automatically frees every
+  // request that it made
 }
 </pre></div>
       `
@@ -1036,8 +1197,8 @@ fn main(): i64 {
 
         <div class="code"><pre>take "fe/file.fe"
 
-fn main(): i64 { 
-  let f: File()
+func main(): i64 { 
+  var f: File()
 
   if f.open("./new.txt", MODE_WRITE_ONLY) is false {
     log("f.open fail!")
@@ -1056,18 +1217,18 @@ fn main(): i64 {
   
   */
 
-  let large: File()
+  var large: File()
   // let's pretend that this file already exists
   // so we don't write millions of checking on errors
   large.open("./large.txt", MODE_READ_BINARY)
 
-  let buf[256]: i8
+  var buf[256]: i8
 
   for true {
     // second argument: size
     // it needs to be exactly sizeof(buf)-1
     // because last byte needs to be '\\0'
-    let n: i64 = large.readbuf(buf, 255)
+    var n: i64 = large.readbuf(buf, 255)
     if n <= 0 { stop }
 
     buf[n] = 0
@@ -1288,7 +1449,7 @@ window.addEventListener("popstate", openFromURL);
 <!-- highlight -->
 <script>
 const ferraKeywords = [
-  "fn", "stct", "impl", "let", "const", "ret", "if", "is", "not", "elif", "else",
+  "func", "stct", "impl", "var", "const", "ret", "if", "is", "not", "elif", "else",
   "for", "match", "take", "ftake", "as", "stop", "extern",
   "pass", "drop", "nodrop", "dropnow", "true", "false", "null", "this",
   "__llh", "__ll", "in", "or", "and", "sizeof", "typeof", "oper", "log", "logl"
@@ -1298,7 +1459,7 @@ const ferraTypes = [
   "nul", "bol", "str", "ptr",
   "i8", "i16", "i32", "i64",
   "u8", "u16", "u32", "u64",
-  "isize", "usize", "hex", "f32", "f64"
+  "isize", "usize", "hex", "f32", "f64", "int", "tup"
 ];
 
 function escapeRegex(text) {
@@ -1339,9 +1500,9 @@ function highlightFerra(code) {
     return text;
   }
 
-  let result = "";
-  let i = 0;
-  let normalStart = 0;
+  var result = "";
+  var i = 0;
+  var normalStart = 0;
 
   while (i < code.length) {
 
@@ -1351,7 +1512,7 @@ function highlightFerra(code) {
         code.slice(normalStart, i)
       );
 
-      let end = code.indexOf("\n", i);
+      var end = code.indexOf("\n", i);
 
       if (end === -1)
         end = code.length;
@@ -1373,7 +1534,7 @@ function highlightFerra(code) {
         code.slice(normalStart, i)
       );
 
-      let end = code.indexOf("*/", i + 2);
+      var end = code.indexOf("*/", i + 2);
 
       if (end === -1) {
         end = code.length;
@@ -1400,7 +1561,7 @@ function highlightFerra(code) {
 
       const quote = code[i];
 
-      let end = i + 1;
+      var end = i + 1;
 
       while (end < code.length) {
         if (code[end] === "\\") {
