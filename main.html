@@ -42,22 +42,19 @@
   </div>
   <div class="code"><pre><span class="kw">take</span> <span class="st">"fe/file.fe"</span>
 
-<span class="kw">fn</span> <span class="fn">main</span>(): <span class="ty">i64</span> {
+<span class="kw">func</span> <span class="fn">main</span>() {
     <span class="ty">// Forge your code.</span>
-    <span class="kw">let</span> file: File()
+    <span class="kw">var</span> file: File()
     file.open(<span class="st">"./data.bin"</span>, MODE_READ_BINARY)
 
-    <span class="kw">let</span> buffer[4096]: <span class="ty">i8</span>
+    <span class="kw">var</span> buffer[4096]: <span class="ty">i8</span>
 
     <span class="kw">for</span> true {
-        <span class="kw">let</span> n: <span class="ty">i64</span> = file.readbuf(buffer, 4095)
-        <span class="kw">if</span> n &lt;= 0 { stop }
+        <span class="kw">var</span> n = file.readbuf(buffer, 4095)
+        <span class="kw">if</span> n &lt;= 0 { <span class="kw">stop</span> }
         buffer[n] = 0
         log(buffer <span class="kw">as</span> str)
     }
-
-    file.close()
-    <span class="kw">ret</span> 0
 }
 
 </pre>
