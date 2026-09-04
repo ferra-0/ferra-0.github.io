@@ -151,16 +151,16 @@ const config = {
       bigtext: "Variables and types - syntax, rules",
       content: `
         <p>
-          Variables are created using keyword <span class="kw">let</span> <br>
+          Variables are created using keyword <span class="kw">var</span> <br>
           There is no strict type system, so no need to note types
         </p>
-        <div class="code"><pre>let x = 5 // automatically becomes num
+        <div class="code"><pre>var x = 5 // automatically becomes num
 
-let name = "Bob" // str
+var name = "Bob" // str
 
-let a = [1, 2, 3] // arr
+var a = [1, 2, 3] // arr
 
-let o = { n: 123 } // obj
+var o = { n: 123 } // obj
 
 /*
 
@@ -168,11 +168,11 @@ let o = { n: 123 } // obj
 
 */
 
-let buf = buffer.create(256) // this is buffer
+var buf = buffer.create(256) // this is buffer
 
-let t = thread.create(null, null) // thread type
+var t = thread.create(null, null) // thread type
 
-let s = file.stream("./from.bin") // stream
+var s = file.stream("./from.bin") // stream
 </pre></div>
       `
     },
@@ -183,7 +183,7 @@ let s = file.stream("./from.bin") // stream
       content: `
         <p><span class="kw">if</span> and <span class="kw">for</span> are as easy as in classic Ferra</p>
         
-        <div class="code"><pre>let x = 5
+        <div class="code"><pre>var x = 5
 
 if x > 8 {
   log("x > 8")
@@ -205,7 +205,7 @@ if x > 8 {
   log(i)
 }
 
-let i = 0 
+var i = 0 
 // we can create another i, 
 // because 'previous' i was deleted after cycle
 for i < 3 {
@@ -214,7 +214,7 @@ for i < 3 {
 }
 
 // syntax sugar using 'of' keyword
-let a = [1, 2, 3]
+var a = [1, 2, 3]
 for n of a {
   // n will also delete after
   // cycle ends
@@ -230,26 +230,26 @@ for n of a {
       content: `
         <p>Here is example:</p>
 
-        <div class="code"><pre>fn add(a, b) { // classic method of declaring a function
+        <div class="code"><pre>func add(a, b) { // classic method of declaring a function
   ret a + b
 }
 
 // anonymous functions
-let mul = (a, b) -> {
+var mul = (a, b) -> {
   ret a * b
 }
 
-let print = t -> {
+var print = t -> {
   log(t)
 }
 
 // function that automatically returns value
-let square = x -> x * x
+var square = x -> x * x
 
-let div = (a, b) -> a / b
+var div = (a, b) -> a / b
 
 // also you can save the function into variables
-let f = add
+var f = add
 log(f(2, 5)) // 7
 </pre></div>
       `
@@ -272,6 +272,8 @@ log(f(2, 5)) // 7
     <tr><td><span class="badge">.last() -> any</span></td> <td>Return the last value of the array</td></tr>
     <tr><td><span class="badge">.join(str) -> str</span></td> <td>Format array into string with a separator</td></tr>
     <tr><td><span class="badge">.len() -> num</span></td> <td>Return the size of an array</td></tr>
+    <tr><td><span class="badge">.map(callback) -> arr</span></td> <td>Map every element of array</td></tr>
+    <tr><td><span class="badge">.clear() -> nul</span></td> <td>Clear the array</td></tr>
   </tbody>
 </table></div>
 <br>
@@ -285,6 +287,8 @@ log(f(2, 5)) // 7
     <tr><td><span class="badge">.starts_with(str) -> bol</span></td> <td>If string starts with a needle, return true, else false</td></tr>
     <tr><td><span class="badge">.len() -> num</span></td> <td>Return the length of string</td></tr>
     <tr><td><span class="badge">.split(str) -> arr</span></td> <td>Split the string into array with a separator</td></tr>
+    <tr><td><span class="badge">.upper() -> str</span></td> <td>Make string uppercase</td></tr>
+    <tr><td><span class="badge">.lower() -> str</span></td> <td>Make string lowercase</td></tr>
   </tbody>
 </table></div>
 <br>
@@ -307,7 +311,7 @@ log(f(2, 5)) // 7
         <div class="code"><pre>/*
   Array
 */
-let a = [1, 2, 3]
+var a = [1, 2, 3]
 
 a.pop() // pop the last element
 a.push(4) // push a new value
@@ -320,7 +324,7 @@ log(a.len()) // 3
 /*
   String
 */
-let name = "Bob"
+var name = "Bob"
 
 log(name.contains("o")) // 1
 log(name.ends_with("y")) // 0
@@ -331,7 +335,7 @@ log(name.starts_with("B")) // 1
 /*
   Object
 */
-let o = { n: 123, t: "Bob" }
+var o = { n: 123, t: "Bob" }
 
 log(o.get("t")) // Bob
 log(o.has("n")) // 1
@@ -350,8 +354,8 @@ log(o.values()) // [123, Peter]
       bigtext: "Local scope and when it's useful",
       content: `
         <p>If you create some variables in a local scope, then they will be deleted as soon as scope will end. Example:</p>
-        <div class="code"><pre>fn local(){ // functions are local scopes too
-  let x = 5
+        <div class="code"><pre>func local(){ // functions are local scopes too
+  var x = 5
 }
 log(x) // error: unknown var: x
 
@@ -359,7 +363,7 @@ log(x) // error: unknown var: x
 // you can use this:
 
 () -> {
-  let x = 5
+  var x = 5
 }
 // x will also delete after 
 // exiting the local scope
@@ -372,11 +376,11 @@ log(x) // error: unknown var: x
 // for example you need to get
 // file's extension:
 
-let filename = "hello.txt"
-let ext = "" // reserving a variable
+var filename = "hello.txt"
+var ext = "" // reserving a variable
 
 () -> {
-  let parts = filename.split(".")
+  var parts = filename.split(".")
   ext = parts.pop()
   // parts will automatically delete
   // after leaving the scope
@@ -426,6 +430,36 @@ log(sys.platform()) // linux
     },
 
     {
+      theme: "Type",
+      bigtext: "Type and it's functions",
+      content: `
+        <div class="table-wrap"><table>
+          <p>Type methods</p>
+          <thead><tr><th>Command</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge">.isArr(val) -> bol</span></td> <td>Return if the value is array</td></tr>
+            <tr><td><span class="badge">.isNum(val) -> bol</span></td> <td>Return if the value is number</td></tr>
+            <tr><td><span class="badge">.isObj(val) -> bol</span></td> <td>Return if the value is object</td></tr>
+            <tr><td><span class="badge">.isStr(val) -> bol</span></td> <td>Return if the value is string</td></tr>
+            <tr><td><span class="badge">.toNum(val) -> num</span></td> <td>Convert string to number</td></tr>
+            <tr><td><span class="badge">.toStr(val) -> str</span></td> <td>Convert every val to string (using stringify methods)</td></tr>
+          </tbody>
+        </table></div>
+
+        <p>Type from eFerra native lib helps you to interact with types</p>
+        <div class="code"><pre>var n = 5
+
+log(type.isNum(n)) // 1
+
+// convert to string
+var s = type.toStr(n)
+
+log(type.isStr(s)) // 1
+</pre></div>
+      `
+    },
+
+    {
       theme: "Math",
       bigtext: "Math and it's functions",
       content: `
@@ -436,10 +470,16 @@ log(sys.platform()) // linux
             <tr><td><span class="badge">.cos(num) -> num</span></td> <td>Cosine</td></tr>
             <tr><td><span class="badge">.sin(num) -> num</span></td> <td>Sine</td></tr>
             <tr><td><span class="badge">.tan(num) -> num</span></td> <td>Tangent</td></tr>
+            <tr><td><span class="badge">.rand() -> num</span></td> <td>Random value</td></tr>
+            <tr><td><span class="badge">.randNum(min, max) -> num</span></td> <td>Random value from min to max</td></tr>
+            <tr><td><span class="badge">.round(num) -> num</span></td> <td>Round the number</td></tr>
+            <tr><td><span class="badge">.floor(num) -> num</span></td> <td>Floor the number</td></tr>
+            <tr><td><span class="badge">.ceil(num) -> num</span></td> <td>Ceil the number</td></tr>
           </tbody>
         </table></div>
         <br>
-        <div class="code"><pre>log(math.cos(0.5)) // 0.877583</pre></div>
+        <div class="code"><pre>log(math.cos(0.5)) // 0.877583
+var n = math.randNum(0, 10) // also random</pre></div>
       `
     },
 
@@ -456,11 +496,11 @@ log(sys.platform()) // linux
           </tbody>
         </table></div>
         <br>
-        <div class="code"><pre>let o = {
+        <div class="code"><pre>var o = {
   n: 123
 }
 
-let ostr = json.stringify(o)
+var ostr = json.stringify(o)
 // stringify an object
 
 log(json.parse(ostr))
@@ -512,12 +552,42 @@ log(timer.ms()) // ~20
           </tbody>
         </table></div>
         <br>
-        <div class="code"><pre>let content = file.read("./hello.txt")
+        <div class="code"><pre>var content = file.read("./hello.txt")
 // reading the file
 
 file.write("./new.txt", "Hello again!")
 // if this file does not exist, 
 // then it will be created
+</pre></div>
+      `
+    },
+
+    {
+      theme: "Input",
+      bigtext: "Input and it's functions",
+      content: `
+        <div class="table-wrap"><table>
+          <p>Input methods</p>
+          <thead><tr><th>Command</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge">.dir() -> str</span></td> <td>Return current working directory</td></tr>
+            <tr><td><span class="badge">.fdir() -> str</span></td> <td>Return Ferra's directory</td></tr>
+            <tr><td><span class="badge">.mkdir(str) -> bol</span></td> <td>If successfully created a directory, return true, else false</td></tr>
+            <tr><td><span class="badge">.read(str) -> str</span></td> <td>Return file's content</td></tr>
+            <tr><td><span class="badge">.stream(str) -> stream</span></td> <td>Open a reading stream</td></tr>
+            <tr><td><span class="badge">.write(str, str) -> bol</span></td> <td>Write into path</td></tr>
+          </tbody>
+        </table></div>
+        <br>
+        <div class="code"><pre>var x = input.get()
+
+// input.get pauses terminal and waits for input
+// input.get's max chars value is 100
+
+// to control max chars value, use input.getMax
+
+var max = input.getMax(200)
+// take 200 max chars now
 </pre></div>
       `
     },
@@ -538,9 +608,9 @@ file.write("./new.txt", "Hello again!")
         </table></div>
 
         <p>Http helps you to interact with web</p>
-        <div class="code"><pre>let r = http.get("https://example.com")
+        <div class="code"><pre>var r = http.get("https://example.com")
 
-let p = http.post("https://example.com", '{ "some": "body" }')
+var p = http.post("https://example.com", '{ "some": "body" }')
 
 log(r) // HTML 
 log(p) // HTML
@@ -577,7 +647,7 @@ log(p) // HTML
         </table></div>
 
         <p>Buffer helps you to interact with raw data</p>
-        <div class="code"><pre>let buf = buffer.create(128) // write the size of buffer
+        <div class="code"><pre>var buf = buffer.create(128) // write the size of buffer
 
 log(buf.capacity()) // 128
 
@@ -608,8 +678,8 @@ log(buf.bytes()) // [72, 101, 108, 108, 111]
           </tbody>
         </table></div>
         <p>You can't create a stream on your own, so it can be created with these methods:</p>
-        <div class="code"><pre>let s = file.stream("./large.txt") // create a file stream
-let b = buffer.create(128) // you need buffer to read a stream
+        <div class="code"><pre>var s = file.stream("./large.txt") // create a file stream
+var b = buffer.create(128) // you need buffer to read a stream
 
 for true {
   s.read(b) // paste the buffer into s
@@ -638,8 +708,8 @@ for true {
 */
 </pre></div>
         <p>HTTP stream is identical to file stream</p>
-        <div class="code"><pre>let s = http.stream("https://example.com") // create a http stream
-let b = buffer.create(128) // you need buffer to read a stream
+        <div class="code"><pre>var s = http.stream("https://example.com") // create a http stream
+var b = buffer.create(128) // you need buffer to read a stream
 
 for true {
   s.read(b) // paste the buffer into s
@@ -686,15 +756,15 @@ for true {
         </table></div>
 
         <p>Thread helps you to write multicore code</p>
-        <div class="code"><pre>fn hello(extra){
+        <div class="code"><pre>func hello(extra){
   // and to take some time
-  // let's add here a big iteration
+  // var's add here a big iteration
   for i in 100 {}
   log("Hello!")
   log(extra) // extra argument
 }
 
-let t = thread.create(hello, ["Hello again!"])
+var t = thread.create(hello, ["Hello again!"])
 // thread.create needs 2 arguments:
 // function and it's arguments
 
@@ -862,14 +932,14 @@ function openFromURL() {
 <!-- highlight -->
 <script>
 const ferraKeywords = [
-  "fn", "let", "ret", "if", "is", "not", "elif", "else",
-  "for", "as", "stop",
+  "func", "var", "ret", "if", "is", "not", "elif", "else",
+  "for", "stop",
   "pass", "true", "false", "null", "this",
   "in", "or", "and", "log", "of"
 ];
 
 const ferraTypes = [
-  "sys", "timer", "file", "math", "http", "buffer", "thread"
+  "sys", "timer", "file", "math", "http", "buffer", "thread", "type", "input"
 ];
 
 function escapeRegex(text) {

@@ -38,6 +38,33 @@
 const config = {
   updates: [
     {
+      theme: "Ferra 1.19.4",
+      bigtext: "Ferra 1.19.4 and further",
+      content: `
+        <p>Ferra 1.19.4 is right here!
+
+Added: 
+<div class="code"><pre>func len(val: arr|tup): usize</pre></div>
+<div class="code"><pre>func typeis< T >(val: T): bol</pre></div>
+<br>
+- Task, Scheduler (structs) <br>
+- Function's return types in structs <br><br>
+
+- eFerra native 'type' object <br>
+- eFerra Array.map, Array.clear <br>
+- eFerra String.lower, String.upper <br>
+- eFerra Math.floor, Math.round + Math.ceil <br><br>
+
+- Error line in Ferra <br><br>
+
+- Error line in eFerra <br>
+- take, ftake in eFerra<br><br>
+
+Thanks for showing interest in Ferra!</p>
+      `
+    },
+
+    {
       theme: "Ferra 1.18.0",
       bigtext: "Ferra 1.18.0 and further",
       content: `
@@ -108,7 +135,7 @@ inlined code: var x: int = 5<br><br><br>
 
 Thanks for showing interest in Ferra!</p>
       `
-    }
+    },
   ],
 
   start: [
@@ -159,6 +186,7 @@ install.sh // or install.ps1</pre></div>
         <tbody>
           <tr><td><span class="badge">iron</span></td> <td>Compile and run the project</td></tr>
           <tr><td><span class="badge">iron new</span></td> <td>Create new project with ferra.json and main.fe</td></tr>
+          <tr><td><span class="badge">iron help</span></td> <td>See other project options</td></tr>
           <tr><td><span class="badge">iron arg1 arg2 ...</span></td> <td>Compile and run the project with extra arguments</td></tr>
         </tbody>
       </table></div>
@@ -893,6 +921,71 @@ func main(): i64 {
 
   ret 0
 }
+</pre></div>
+      `
+    },
+
+    {
+      theme: "Attributes",
+      bigtext: "Attributes and what are these for",
+      content: `
+        <p>Create or use attributes by adding #. Built-in attributes:</p>
+        <div class="code"><pre>// there are only 2 built-in attributes
+// for now: #inline and #noinline
+
+// add attribute before function
+
+#inline
+func fastAdd(a: int, b: int): int {
+  ret a + b
+}
+
+// llvm adds attribute 'alwaysinline'
+
+func main() {
+  log(fastAdd(2, 5)) // 7
+}
+</pre></div>
+
+        <p>Creating attributes:</p>
+        <div class="code"><pre>// to create attribute, write this:
+
+#func test(f: func) { // custom attrs always take first argument as a function
+  log("test")
+  f()
+  log("test")
+}
+
+#func testPrint(f: func, txt: str) { // add more parameters
+  log(txt)
+  f()
+  log(txt)
+}
+
+#test // add attr
+func print() {
+  log("Hello!")
+}
+
+#testPrint("another test")
+func hello() {
+  log("Print!")
+}
+
+func main() {
+  print()
+
+  hello()
+}
+
+/* -> Output
+  test
+  Hello!
+  test
+  another test
+  Print!
+  another test
+*/
 </pre></div>
       `
     }
